@@ -17,6 +17,14 @@ class AuthController extends Controller
 	 public function login(Request $request)
     {
     $inputs=$request->all();
+
+
+    if((new AppUsers())->where('phone',$inputs['phone'])->exists())
+
+{   
+                 
+
+
     if(Auth::attempt(['phone' => $inputs['phone'], 'password' =>$inputs['password']],true)){ 
             $user = Auth::user();
             
@@ -25,6 +33,11 @@ class AuthController extends Controller
 
 
              $generateAuthToken = (new AppUsers())->join('user_details','app_users.id','=','user_details.user_id')->select('app_users.*','user_details.f_name_set','user_details.l_name_set','user_details.email_set','user_details.city_set','user_details.latitude_set','user_details.longitude_set','user_details.user_type_set','user_details.description_set')->where('app_users.phone',$inputs['phone'])->first();
+
+             if($generateAuthToken->is_user_verified=='0')
+             {
+             	return(['success' => false,'status_code'=>200,'message'=>"User is Not Verified!",'result'=> (object)[]]);
+             }
  
              if (!session('app_user_id')) {
            session(['app_user_id' => $generateAuthToken->id]);
@@ -42,6 +55,12 @@ class AuthController extends Controller
         else{ 
             return(['success' => false,'status_code'=>200,'message'=>"Please Check Your Login Credentials",'result'=> (object)[]]); 
         } 
+    }
+
+    else
+    {
+    	 return(['success' => false,'status_code'=>200,'message'=>"This number is not associated with frisbiz, please signup.",'result'=> (object)[]]);
+    }
     }
 
     }

@@ -6,8 +6,8 @@ function SendTextMessage($number,$message)
 	$apiKey = urlencode('NTTMP5irf+Q-fx6J2bELOuFa0pM0rwT6yQ7k0MZo6r	');
 	
 	// Message details
-	$numbers = $number;
-	$sender = urlencode('TXTLCL');
+	$numbers = '7696763111';
+	$sender = urlencode('ARIESH');
 	$message = rawurlencode($message);
  
 	// $numbers = implode(',', $numbers);

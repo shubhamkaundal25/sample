@@ -22,17 +22,18 @@ class UserController extends Controller
           if($request->isMethod("POST"))
           {
              $inputs=$request->all();
-             $otp=generateNumericOTP();
+             // $otp=generateNumericOTP();
+             $otp="1234";
 
-             // if((new AppUsers())->where('phone',$inputs['phone'])->exists())
-             // {
-             //   return(['success'=>false,'status_code'=>200,'message'=>'This Phone Number Already Exists','result'=>[]]);
+             if((new AppUsers())->where('phone',$inputs['phone'])->exists())
+             {
+               return(['success'=>false,'status_code'=>200,'message'=>'This Phone Number Already Exists','result'=>[]]);
 
-             // }
+             }
 
              // $otp="1234";
 
-             SendTextMessage($inputs['phone']," Please Use This One Time Password To Verify ".$otp);
+             // SendTextMessage($inputs['phone']," OTP For Account Verification is ".$otp." Please Enter This OTP To Verify Your Frisbiz Account");
 
 
 
@@ -131,6 +132,50 @@ class UserController extends Controller
       $user = auth()->guard('api')->user(); 
       // dd()
       return response()->json($user);
+    }
+
+
+
+    public function ResendOtp(Request $request)
+
+    {
+      try{
+            if($request->isMethod('post'))
+            {
+              $inputs=$request->all();
+
+              if((new AppUsers())->where('phone',$inputs['phone'])->exists())
+              {
+                 $otp=generateNumericOTP();
+                 $otp="1234";
+
+                 (new AppUsers())->where('phone',$inputs['phone'])->update(['otp'=>$otp]);
+
+                 // SendTextMessage($inputs['phone']," OTP For Account Verification is ".$otp." Please Enter This OTP To Verify Your Frisbiz Account");
+
+                 return (['success'=>true,'status_code'=>200,'message'=>"OPT Sent Successfully"]);
+              }
+
+              else
+              {
+                return (['success'=>false,'status_code'=>200,'message'=>"This Number Do Not Exist In Our Records"]);
+              }
+
+
+
+            }
+
+            else
+
+            {
+              return (['success'=>false,'status_code'=>500,'message'=>"Oops! Something Went Wrong "]);
+            }
+      }
+
+      catch(\Exception $e)
+      {
+        echo $e->getMessage();
+      }
     }
 
 
