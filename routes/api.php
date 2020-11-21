@@ -24,7 +24,7 @@ Route::any('register','Api\UserController@Register');
 
 Route::any('verify/otp','Api\UserController@verifyOtp');
 
-Route::post('login','AuthController@login');
+Route::post('login','Api\AuthController@login');
 
 Route::post('resend/otp','Api\UserController@ResendOtp');
 

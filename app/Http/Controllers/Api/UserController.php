@@ -35,18 +35,13 @@ class UserController extends Controller
 
              // SendTextMessage($inputs['phone']," OTP For Account Verification is ".$otp." Please Enter This OTP To Verify Your Frisbiz Account");
 
-
-
-             $data=array(
-             
-            
-             'phone'=>$inputs['phone'],
+			 $data=array( 'phone'=>$inputs['phone'],
              'phone_code'=>$inputs['phone_code'],
              
              'password'=>bcrypt($inputs['password']),
              
              'otp'=>$otp
-         );
+              );
 
  
 
@@ -88,7 +83,10 @@ class UserController extends Controller
 
 
 
-            $generateAuthToken = (new AppUsers())->join('user_details','app_users.id','=','user_details.user_id')->select('app_users.*','user_details.f_name_set','user_details.l_name_set','user_details.email_set','user_details.city_set','user_details.latitude_set','user_details.longitude_set','user_details.user_type_set','user_details.description_set')->where('app_users.phone',$inputs['phone'])->first();
+            $generateAuthToken = (new AppUsers())
+            ->join('user_details','app_users.id','=','user_details.user_id')->select('app_users.*','user_details.f_name_set','user_details.l_name_set','user_details.email_set','user_details.city_set','user_details.latitude_set','user_details.longitude_set','user_details.user_type_set','user_details.description_set')
+            ->where('app_users.phone',$inputs['phone'])
+            ->first();
 
              if (!session('app_user_id')) {
            session(['app_user_id' => $generateAuthToken->id]);
